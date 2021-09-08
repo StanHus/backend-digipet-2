@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { getDigipet } from "./digipet/model";
-import { hatchDigipet, walkDigipet } from "./digipet/controller";
+import { hatchDigipet, walkDigipet, trainDigipet, feedDigipet, ignoreDigipet, rehomeDigipet } from "./digipet/controller";
 
 const app = express();
 
@@ -56,6 +56,23 @@ app.get("/digipet/hatch", (req, res) => {
   }
 });
 
+app.get("/digipet/rehome", (req, res) => {
+  const digipet = getDigipet();
+  if (digipet) {
+    const digipet = rehomeDigipet();
+    res.json({
+      message:
+        "You have successfully rehomed your digipet. Now you have a space for a new one",
+      digipet,
+    });
+  } else {
+    res.json({
+      message: "You can't rehome a digipet now because you don't have one!",
+      digipet,
+    });
+  }
+});
+
 app.get("/digipet/walk", (req, res) => {
   // check the user has a digipet to walk
   if (getDigipet()) {
@@ -68,6 +85,54 @@ app.get("/digipet/walk", (req, res) => {
     res.json({
       message:
         "You don't have a digipet to walk! Try hatching one with /digipet/hatch",
+    });
+  }
+});
+
+app.get("/digipet/train", (req, res) => {
+  // check the user has a digipet to walk
+  if (getDigipet()) {
+    trainDigipet();
+    res.json({
+      message: "You trained your digipet. It looks more disciplined now!",
+      digipet: getDigipet(),
+    });
+  } else {
+    res.json({
+      message:
+        "You don't have a digipet to train! Try hatching one with /digipet/hatch",
+    });
+  }
+});
+
+app.get("/digipet/feed", (req, res) => {
+  // check the user has a digipet to walk
+  if (getDigipet()) {
+    feedDigipet();
+    res.json({
+      message: "Mmm, feeding time for your digipet",
+      digipet: getDigipet(),
+    });
+  } else {
+    res.json({
+      message:
+        "You don't have a digipet to feed! Try hatching one with /digipet/hatch",
+    });
+  }
+});
+
+app.get("/digipet/ignore", (req, res) => {
+  // check the user has a digipet to walk
+  if (getDigipet()) {
+    ignoreDigipet();
+    res.json({
+      message: "Congrats, you ignored your digipet. Do you feel good about that?",
+      digipet: getDigipet(),
+    });
+  } else {
+    res.json({
+      message:
+        "You don't have a digipet to ignore (thank god)! Try hatching one with /digipet/hatch",
     });
   }
 });
